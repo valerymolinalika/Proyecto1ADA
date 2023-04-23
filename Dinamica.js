@@ -40,7 +40,7 @@ function costoSolucion (matriz,accionesTotales,arrayO,i,j){
           
           for( var k=i;k<=j-1;k++){
             
-            q = costoSolucion(matriz,accionesTotales,arrayO,i,k)[0] + costoSolucion(matriz,accionesTotales,arrayO,k+1,j)[0]
+            q = Math.max(costoSolucion(matriz,accionesTotales,arrayO,i,k)[0], costoSolucion(matriz,accionesTotales,arrayO,k+1,j)[0]) 
            
             if (q > matriz[i][j]){
               
