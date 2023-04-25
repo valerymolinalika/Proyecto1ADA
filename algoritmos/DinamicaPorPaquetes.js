@@ -23,15 +23,18 @@ const path = require ("path")
 
 
 function maximizarGanancias(accionesTotales, precioMinimo, numerocompradores, compradores, paquete) {
-    var memo = Array(numerocompradores).fill().map(()=>Array(accionesTotales + 1).fill())
-    return costoSolucion(accionesTotales, precioMinimo, numerocompradores, compradores, memo, 0, paquete);
+
+    var memo = Array(numerocompradores).fill().map(()=>Array(accionesTotales/paquete).fill())
+    acciones_paquete=accionesTotales/paquete;
+    return costoSolucion(acciones_paquete, precioMinimo, numerocompradores, compradores, memo, 0, paquete);
 
   }
   
   function costoSolucion(accionesTotales, precioMinimo, numerocompradores, compradores, memo, i, paquete) {
+        
         if (i == numerocompradores) {
             //console.log(accionesTotales)
-            return accionesTotales * precioMinimo;
+            return accionesTotales * precioMinimo*paquete;
         }
   
         if (memo[i][accionesTotales] !== undefined) {
@@ -43,17 +46,18 @@ function maximizarGanancias(accionesTotales, precioMinimo, numerocompradores, co
       
         
         opciones.push(
-            compradores[i][0] * 0 + 
+            (compradores[i][0] * 0 * paquete) + 
             costoSolucion(accionesTotales, precioMinimo, numerocompradores, compradores, memo, i+1,paquete)
         );
-        for (let j = compradores[i][2];  j <= Math.min(compradores[i][1], accionesTotales); j++) {
-            if (j==paquete || j%paquete==0){
+        for (let j = (compradores[i][2]/paquete);  j <= Math.min((compradores[i][1]/paquete), accionesTotales); j++) {
+            
+              //console.log("holaa")
                 opciones.push(
-                    compradores[i][0] * j + 
+                    (compradores[i][0] * j * paquete) + 
                     costoSolucion(accionesTotales - j, precioMinimo, numerocompradores, compradores, memo, i+1,paquete)
                 ); 
                 
-            }
+            
            
             
         }
