@@ -1,0 +1,1 @@
+{"ganancia":70000,"detallesCompra":[{"comprador":0,"accionesCompradas":0,"montoPagado":0},{"comprador":1,"accionesCompradas":0,"montoPagado":0},{"comprador":2,"accionesCompradas":0,"montoPagado":0},{"comprador":3,"accionesCompradas":0,"montoPagado":0},{"comprador":4,"accionesCompradas":0,"montoPagado":0},{"comprador":5,"accionesCompradas":10000,"montoPagado":70000}]}

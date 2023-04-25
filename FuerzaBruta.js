@@ -13,45 +13,48 @@ const path = require ("path")
 //let n = arreglito.length - 1;
 
 function fuerzaBruta(accionesTotales,precioMinimo, compradores, arrayO) {
-    let x = [];
-    let precioGobierno = arrayO[arrayO.length - 1][0];
-    let combinaciontotal = [];
-  
-    for (let i = 0; i < Math.pow(2, arrayO.length - 1); i++) {
-      let combinaciontransi = [];
-      let opcion = 0;
-  
-      for (let j = 0; j < arrayO.length - 1; j++) {
-        if ((i / Math.pow(2, j)) % 2 >= 1) {
-          opcion += arrayO[j][1];
-          combinaciontransi[j] = arrayO[j][1];
-        } else {
-          combinaciontransi[j] = 0;
-        }
-  
-        if (opcion > accionesTotales) {
-          break;
-        }
+  let x = [];
+  let precioGobierno = arrayO[arrayO.length - 1][0];
+  let combinaciontotal = [];
+  let mejorCombinacion = [];
+
+  for (let i = 0; i < Math.pow(2, arrayO.length - 1); i++) {
+    let combinaciontransi = [];
+    let opcion = 0;
+
+    for (let j = 0; j < arrayO.length - 1; j++) {
+      if ((i / Math.pow(2, j)) % 2 >= 1) {
+        opcion += arrayO[j][1];
+        combinaciontransi[j] = arrayO[j][1];
+      } else {
+        combinaciontransi[j] = 0;
       }
-  
-      if (opcion <= accionesTotales) {
-        const faltante = accionesTotales - opcion;
-        combinaciontransi[arrayO.length - 1] = faltante >= 0 ? faltante : 0;
-  
-        const ganancia = combinaciontransi.reduce((acc, curr, idx) => {
-          return acc + curr * arrayO[idx][0];
-        }, 0);
-  
-        x.push(ganancia);
-        combinaciontotal.push(combinaciontransi);
+
+      if (opcion > accionesTotales) {
+        break;
       }
     }
-  
-    const mejorGanancia = Math.max(...x);
-    console.log(mejorGanancia)
-    return mejorGanancia;
+
+    if (opcion <= accionesTotales) {
+      const faltante = accionesTotales - opcion;
+      combinaciontransi[arrayO.length - 1] = faltante >= 0 ? faltante : 0;
+
+      const ganancia = combinaciontransi.reduce((acc, curr, idx) => {
+        return acc + curr * arrayO[idx][0];
+      }, 0);
+
+      x.push(ganancia);
+      combinaciontotal.push(combinaciontransi);
+
+      if (ganancia === Math.max(...x)) {
+        mejorCombinacion = combinaciontransi;
+      }
+    }
   }
 
+  
+  return { ganancia: Math.max(...x), combinacion: mejorCombinacion };
+}
 let A = null;
 let B = null;
 let numOfertas = null;
@@ -60,19 +63,19 @@ let queries = [];
 
 let filename = "resultadoFuerzaBruta.txt";
 const writeFile = (name, content, index = 0,) => {
-  fs.writeFile("./ResultadosFuerzaBruta/"+name+".txt", content, {flag: "wx"}, (err) => {
-    if(err){
-      // filename = filename + index;
-      index++
-      writeFile(path.parse(filename).name + index, content, index);
-    }
-  })
+  const fileName = index === 0 ? name : `${name}(${index})`;
+  const filePath = path.join('./ResultadosFuerzaBruta', `${fileName}.txt`);
+  if (fs.existsSync(filePath)) {
+    writeFile(name, content, index + 1);
+  } else {
+    fs.writeFileSync(filePath, content, {flag: "w"});
+  }
 }
 
-function leer(){
-  const files = fs.readdirSync('./pruebas') 
+function leerFuerzaBruta(){
+  const files = fs.readdirSync('./pruebasFuerzaBruta') 
   for(i=0; i<files.length; i++){
-    fs.readFileSync("./pruebas/"+files[i], "utf8").toString().split(/\r?\n/).map((line, index) => {
+    fs.readFileSync("./pruebasFuerzaBruta/"+files[i], "utf8").toString().split(/\r?\n/).map((line, index) => {
       const lineArr = line.split(",");
       //console.log(lineArr)
       if (index == 0) {
@@ -101,7 +104,6 @@ function leer(){
   
 }
 
-leer();
+leerFuerzaBruta();
 
 
-//console.log(fuerzaBruta(A,B, n, arreglito));
