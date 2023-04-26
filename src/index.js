@@ -15,10 +15,11 @@ root.render(
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: '100vh'
+    minHeight: '100vh',
+    minWidth: '100vh'
   }}>
     <h1 style={{ fontSize: '36px', color: 'White', fontWeight: 'bold' }}>
-      SUBASTA PUBLICA DE ACCIONES
+      SUBASTA PÚBLICA DE ACCIONES
     </h1>
     <App />
   </div>

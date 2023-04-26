@@ -48,15 +48,19 @@
   return { ganancia: Math.max(...x), combinacion: mejorCombinacion };
 }
 
-export default function fuerzaBruta(accionesTotales,precioMinimio,numerocompradores,arrayO){
+export default function accionesFB(accionesTotales,precioMinimio,numerocompradores,arrayO){
    
     let object = maximizarGananciasFuerzaBruta(accionesTotales,precioMinimio,numerocompradores,arrayO)
     let solution = object.combinacion
     let solutionCost = object.ganancia
     let solutionCostString = JSON.stringify(solutionCost);
-    let solutionString = JSON.stringify(solution);
-    let mensaje = "Maxima Ganancia posible: "
-    let result = mensaje.concat(solutionCostString," Distribucion de las acciones: ",solutionString)
+    let solutionString = solution[0];
+
+    for (let i = 1; i < solution.length; i++) {
+      solutionString += "\n" + solution[i];
+   }
+
+    let result =  solutionCostString + "\n" + solutionString;
   
     return result
 }

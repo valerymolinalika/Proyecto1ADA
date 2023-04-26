@@ -61,14 +61,19 @@
       }
 
 
-      export default function Dinamica(accionesTotales, precioMinimo, numerocompradores, compradores){
+      export default function accionesPD1(accionesTotales, precioMinimo, numerocompradores, compradores){
         let object = maximizarGananciasDinamica(accionesTotales, precioMinimo, numerocompradores, compradores);
         let solutionCost = object.ganancia;
         let solution = accionesComprador(accionesTotales, precioMinimo, numerocompradores, compradores, object.memo);
         let solutionCostString = JSON.stringify(solutionCost);
-        let solutionString = JSON.stringify(solution);
-        let mensaje = "Maxima Ganancia posible: "
-        let result = mensaje.concat(solutionCostString," Distribucion de las acciones: ",solutionString)
+        let solutionString = solution[0];
+        
+        for (let i = 1; i < solution.length; i++) {
+          solutionString += "\n" + solution[i];
+       }
+
+
+        let result =  solutionCostString + "\n" + solutionString;
         return result
       }
 

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Voraz from './algoritmos/voraz';
-import fuerzaBruta from './algoritmos/FuerzaBruta';
-import Dinamica from './algoritmos/dinamica';
-import DinamicaPaquetes from './algoritmos/DinamicaPorPaquetes';
+import accionesV from './algoritmos/accionesV';
+import accionesFB from './algoritmos/accionesFB';
+import accionesPD1 from './algoritmos/accionesPD1';
+import accionesPD2 from './algoritmos/accionesPD2';
 import { FileInput } from 'daisyui';
 import { saveAs } from 'file-saver'
 
@@ -17,6 +17,7 @@ export default function App() {
 	const [numeroPersonas, setNumeroPersonas] = useState(null)
 	const [ofertas, setOfertas] = useState(null)
 	const [paquetes, setPaquetes] = useState(null)
+	const [fileContent, setFileContent] = useState(null)
 	console.log(algorithm)
 
 
@@ -24,18 +25,6 @@ export default function App() {
 	const handleOptionChange2 = (event) => {
 		setSelectedOption(event.target.value);
 	};
-
-
-
-	// async function doSomethingAsync() {
-	// 	await handleSubmission()
-	// 	return new Promise((resolve) => {
-	// 		setTimeout(() => {
-	// 			resolve();
-	// 		}, 1000);
-	// 	});
-	// }
-
 
 
 	const changeHandler = (event) => {
@@ -47,8 +36,9 @@ export default function App() {
 		reader.onload = (e) => {
 
 			const content = e.target.result;
+			setFileContent(content)
 			const queries = []
-			console.log((content.split('\n').length) - 1);
+			//console.log((content.split('\n').length) - 1);
 			if (event.target.files[0].name[event.target.files[0].name.length - 4] + event.target.files[0].name[event.target.files[0].name.length - 3] +
 				event.target.files[0].name[event.target.files[0].name.length - 2] + event.target.files[0].name[event.target.files[0].name.length - 1] == "psub") {
 				console.log("Entre en paquetes")
@@ -96,19 +86,19 @@ export default function App() {
 
 	const handleSubmission = () => {
 		if (selectedOption == 'Fuerza Bruta') {
-			const result = fuerzaBruta(accionesTotales, precioMinimio, numeroPersonas, ofertas);
+			const result = accionesFB(accionesTotales, precioMinimio, numeroPersonas, ofertas);
 			setAlgorithm(result);
 			createFile(result);
 		} else if (selectedOption == 'Dinamica') {
-			const result = (Dinamica(accionesTotales, precioMinimio, numeroPersonas, ofertas))
+			const result = (accionesPD1(accionesTotales, precioMinimio, numeroPersonas, ofertas))
 			setAlgorithm(result);
 			createFile(result);
 		} else if (selectedOption == 'Dinamica Paquetes') {
-			const result = (DinamicaPaquetes(accionesTotales, precioMinimio, numeroPersonas, ofertas, paquetes))
+			const result = (accionesPD2(accionesTotales, precioMinimio, numeroPersonas, ofertas, paquetes))
 			setAlgorithm(result);
 			createFile(result);
 		} else if (selectedOption == 'Voraz') {
-			const result = (Voraz(accionesTotales, precioMinimio, numeroPersonas, ofertas))
+			const result = (accionesV(accionesTotales, precioMinimio, numeroPersonas, ofertas))
 			setAlgorithm(result);
 			createFile(result);
 		}
@@ -137,93 +127,112 @@ export default function App() {
 	//   }
 
 	return (
-		<div >
+		<div class="grid grid-cols-2 gap-4 gap-x-20 mt-8" >
+			<div class="mt-10">
+				<div><input type="file" onChange={changeHandler} className="file-input file-input-bordered file-input-primary w-full max-w-xs my-8 " />
+					{isFilePicked ? (
+						<div className='mb-8' >
+							<p>Nombre del Archivo: {selectedFile.name}</p>
+							<p>Tipo de Archivo: {selectedFile.type}</p>
+							<p>Tamaño en bytes: {selectedFile.size}</p>
+							<p>
+								Ultima Modificacion:{' '}
+								{/* {console.log(fuerzaBruta(accionesTotales,precioMinimio,numeroPersonas,ofertas))} */}
+								{selectedFile.lastModifiedDate.toLocaleDateString()}
+							</p>
+						</div>
+					) : (
 
-			<input type="file" onChange={changeHandler} className="file-input file-input-bordered file-input-primary w-full max-w-xs my-8 " />
-			{isFilePicked ? (
-				<div className='mb-8' >
-					<p>Nombre del Archivo: {selectedFile.name}</p>
-					<p>Tipo de Archivo: {selectedFile.type}</p>
-					<p>Tamaño en bytes: {selectedFile.size}</p>
-					<p>
-						Ultima Modificacion:{' '}
-						{/* {console.log(fuerzaBruta(accionesTotales,precioMinimio,numeroPersonas,ofertas))} */}
-						{selectedFile.lastModifiedDate.toLocaleDateString()}
-					</p>
+						<p className='mb-8'>Aqui apareceran los detalles del Archivo subido</p>
+					)}
+
+
+					<div class="space-y-4">
+						<label class="flex items-center space-x-5">
+							<input
+								type="radio"
+								name="radio-1"
+								value="Fuerza Bruta"
+								className="radio radio-primary"
+								checked={selectedOption === 'Fuerza Bruta'}
+								onChange={() => handleOptionChange('Fuerza Bruta')}
+							/>
+							<span>fuerzaBruta</span>
+						</label>
+						<label class="flex items-center space-x-5">
+							<input
+								type="radio"
+								name="radio-1"
+								value="Dinamica"
+								className="radio radio-primary"
+								checked={selectedOption === 'Dinamica'}
+								onChange={() => handleOptionChange('Dinamica')}
+							/>
+							<span>Algoritmo Dinamico</span>
+
+
+						</label>
+						<label class="flex items-center space-x-5">
+							<input
+								type="radio"
+								name="radio-1"
+								value="Dinamica Paquetes"
+								className="radio radio-primary"
+								checked={selectedOption === 'Dinamica Paquetes'}
+								onChange={() => handleOptionChange('Dinamica Paquetes')}
+							/>
+							<span>Dinamica por Paquetes</span>
+
+						</label>
+						<label class="flex items-center space-x-5">
+							<input
+								type="radio"
+								name="radio-1"
+								value="Voraz"
+								className="radio radio-primary"
+								checked={selectedOption === 'Voraz'}
+								onChange={() => handleOptionChange('Voraz')}
+							/>
+							<span>Algoritmo Voraz</span>
+
+						</label>
+
+						<p>Opcion seleccionada: {selectedOption} </p>
+					</div>
+					<div >
+						<button onClick={handleSubmission} className="btn bg-primary my-5" >Subastar</button>
+					</div></div>
+			</div>
+			<div class='my-8  space-y-3'>
+			    Datos de entrada:		
+				<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+					
+					<textarea
+						className="textarea textarea-primary center mb-7 mt-3"
+						value={fileContent || ''}
+						placeholder="Aquí apareceran las entradas de la subasta"
+						disabled
+						style={{ flex: 1, width: '200%', height: '200px' }}
+
+					/>
 				</div>
-			) : (
 
-				<p className='mb-8'>Aqui apareceran los detalles del Archivo subido</p>
-			)}
+				Datos de salida:
+				<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+					
+					<textarea
+						className="textarea textarea-primary center mb-7"
+						value={algorithm || ''}
+						placeholder="Aquí aparecerá el resultado de la subasta"
+						disabled
+						style={{ flex: 1, width: '200%', height: '200px' }}
 
-
-			<div class="space-y-4">
-				<label class="flex items-center space-x-5">
-					<input
-						type="radio"
-						name="radio-1"
-						value="Fuerza Bruta"
-						className="radio radio-primary"
-						checked={selectedOption === 'Fuerza Bruta'}
-						onChange={() => handleOptionChange('Fuerza Bruta')}
 					/>
-					<span>fuerzaBruta</span>
-				</label>
-				<label class="flex items-center space-x-5">
-					<input
-						type="radio"
-						name="radio-1"
-						value="Dinamica"
-						className="radio radio-primary"
-						checked={selectedOption === 'Dinamica'}
-						onChange={() => handleOptionChange('Dinamica')}
-					/>
-					<span>Algoritmo Dinamico</span>
-
-
-				</label>
-				<label class="flex items-center space-x-5">
-					<input
-						type="radio"
-						name="radio-1"
-						value="Dinamica Paquetes"
-						className="radio radio-primary"
-						checked={selectedOption === 'Dinamica Paquetes'}
-						onChange={() => handleOptionChange('Dinamica Paquetes')}
-					/>
-					<span>Dinamica por Paquetes</span>
-
-				</label>
-				<label class="flex items-center space-x-5">
-					<input
-						type="radio"
-						name="radio-1"
-						value="Voraz"
-						className="radio radio-primary"
-						checked={selectedOption === 'Voraz'}
-						onChange={() => handleOptionChange('Voraz')}
-					/>
-					<span>Algoritmo Voraz</span>
-
-				</label>
-
-				<p>Opcion seleccionada: {selectedOption} </p>
+				</div>
 			</div>
-			<div >
-				<button onClick={handleSubmission} className="btn bg-primary my-5" >Subastar</button>
-			</div>
-			<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-				<textarea
-				className="textarea textarea-primary center"
-				value={algorithm || ''}
-				placeholder="Aquí aparecerá el resultado de la subasta"
-				disabled
-				style={{ flex: 1, width: '200%', height: '200px' }}
 
-				/>
-			</div>
 		</div>
-		
+
 	)
 }
 

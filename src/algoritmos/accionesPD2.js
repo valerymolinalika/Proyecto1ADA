@@ -89,14 +89,21 @@
         return compras;
       }
 
-    export default function DinamicaPaquetes(accionesTotales,precioMinimo,numerocompradores,arrayO,paquete){
+    export default function accionesPD2(accionesTotales,precioMinimo,numerocompradores,arrayO,paquete){
         let object = maximizarGananciasPaquetes(accionesTotales,precioMinimo,numerocompradores,arrayO,paquete)
         let solution = accionesComprador(accionesTotales, precioMinimo, numerocompradores, arrayO, object.memo,paquete)
         let solutionCost = object.ganancia
         let solutionCostString = JSON.stringify(solutionCost);
-        let solutionString = JSON.stringify(solution);
-        let mensaje = "Maxima Ganancia posible: "
-        let result = mensaje.concat(solutionCostString," Distribucion de las acciones: ", solutionString)
+        let solutionString = solution[0];
+        
+        for (let i = 1; i < solution.length; i++) {
+          solutionString += "\n" + solution[i];
+       }
+       
+
+        let result =  solutionCostString + "\n" + solutionString;
+
+
         return result
     }
     // let A = null;

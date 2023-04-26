@@ -63,13 +63,20 @@ function maximizarGananciasVoraz(accionesTotales, precioMinimo,numerocompradores
 }
 
 
-export default function Voraz(accionesTotales,precioMinimio,numerocompradores,arrayO){
-  let object = maximizarGananciasVoraz(accionesTotales,precioMinimio,numerocompradores,arrayO)
-  let solution = object[1]
-  let solutionCost = object[0]
+export default function accionesV(accionesTotales, precioMinimo, numeroCompradores, arrayO) {
+  let object = maximizarGananciasVoraz(accionesTotales, precioMinimo, numeroCompradores, arrayO);
+  let solution = object[1];
+  let solutionCost = object[0];
   let solutionCostString = JSON.stringify(solutionCost);
-  let solutionString = JSON.stringify(solution);
-  let mensaje = "Maxima Ganancia posible: "
-  let result = mensaje+solutionCostString+" Distribucion de las acciones: "+"\n"+ solutionString
-  return result
+  let solutionString = solution[0];
+  
+  
+  
+  // loop through solution array and add newline after each index
+  for (let i = 1; i < solution.length; i++) {
+     solutionString += "\n" + solution[i];
+  }
+  
+  let result =  solutionCostString + "\n" + solutionString;
+  return result;
 }
