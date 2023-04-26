@@ -1,6 +1,6 @@
 # Proyecto de Analisis y Diseño de Algoritmos II 
 
-## _Contenido
+## _Contenido_
 Las funciones principales del programa se enceuntran alojadas en la carpeta algoritmos situada en el src con los respectivos nombres: 
 * accionesFB
 * accionesV
