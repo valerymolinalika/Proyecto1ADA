@@ -24,37 +24,39 @@
 
  function maximizarGananciasPaquetes(accionesTotales, precioMinimo, numerocompradores, compradores, paquete) {
 
-    var memo = Array(numerocompradores).fill().map(()=>Array(accionesTotales/paquete).fill())
+    var memo = Array(numerocompradores);
+    for (let i = 0; i < numerocompradores; i++){
+        memo[i]= Array(accionesTotales/paquete).fill(undefined);
+    }
     let acciones_paquete=accionesTotales/paquete;
-    return costoSolucion(acciones_paquete, precioMinimo, numerocompradores, compradores, memo, 0, paquete);
-
+    const solucionOptima = costoSolucion(acciones_paquete, precioMinimo, numerocompradores, compradores, memo, 0, paquete);
+    return {ganancia: solucionOptima.ganancia, memo: solucionOptima.memo};
   }
   
   function costoSolucion(accionesTotales, precioMinimo, numerocompradores, compradores, memo, i, paquete) {
         
         if (i == numerocompradores) {
-            //console.log(accionesTotales)
-            return accionesTotales * precioMinimo*paquete;
+            return { ganancia: accionesTotales * precioMinimo*paquete, memo: memo};
         }
   
         if (memo[i][accionesTotales] !== undefined) {
-          return memo[i][accionesTotales];
+          return { ganancia: memo[i][accionesTotales], memo:memo};
         }
   
-        let mejorGanancia = 0;
+        let mejorGanancia = { ganancia: 0, memo:memo};
         let opciones = [];
       
         
         opciones.push(
             (compradores[i][0] * 0 * paquete) + 
-            costoSolucion(accionesTotales, precioMinimo, numerocompradores, compradores, memo, i+1,paquete)
+            costoSolucion(accionesTotales, precioMinimo, numerocompradores, compradores, memo, i+1,paquete).ganancia
         );
         for (let j = (compradores[i][2]/paquete);  j <= Math.min((compradores[i][1]/paquete), accionesTotales); j++) {
             
               //console.log("holaa")
                 opciones.push(
                     (compradores[i][0] * j * paquete) + 
-                    costoSolucion(accionesTotales - j, precioMinimo, numerocompradores, compradores, memo, i+1,paquete)
+                    costoSolucion(accionesTotales - j, precioMinimo, numerocompradores, compradores, memo, i+1,paquete).ganancia
                 ); 
                 
             
@@ -62,20 +64,39 @@
             
         }
         
-        mejorGanancia = Math.max(...opciones);
-        memo[i][accionesTotales]=mejorGanancia;
+        mejorGanancia = { ganancia:Math.max(...opciones), memo:memo};
+        memo[i][accionesTotales]=mejorGanancia.ganancia;
         
         return mejorGanancia;
     }
 
-    export default function DinamicaPaquetes(accionesTotales,precioMinimio,numerocompradores,arrayO,paquete){
-        let object = maximizarGananciasPaquetes(accionesTotales,precioMinimio,numerocompradores,arrayO,paquete)
-        //let solution = object.detallesCompra
-        //let solutionCost = object.ganancia
-        //let solutionCostString = JSON.stringify(solutionCost);
-        //let solutionString = JSON.stringify(solution);
+    function accionesComprador(accionesTotales, precioMinimo, numerocompradores, compradores, memo, paquete) {
+        const compras = Array(numerocompradores).fill(0);
+        let accionesRestantes = accionesTotales/paquete;
+        for (let i = 0; i < numerocompradores; i++) {
+          for (let j = (compradores[i][2]/paquete);  j <= Math.min((compradores[i][1]/paquete), accionesTotales/paquete); j++) {
+            if (i < numerocompradores-1) {
+            if (memo[i][accionesRestantes] === compradores[i][0] *paquete *j + memo[i+1][accionesRestantes-j]) {
+                console.log("Estoy entrando")
+              compras[i] += j;
+              accionesRestantes -= j;
+              break;
+            }
+        }
+          }
+        }
+        
+        return compras;
+      }
+
+    export default function DinamicaPaquetes(accionesTotales,precioMinimo,numerocompradores,arrayO,paquete){
+        let object = maximizarGananciasPaquetes(accionesTotales,precioMinimo,numerocompradores,arrayO,paquete)
+        let solution = accionesComprador(accionesTotales, precioMinimo, numerocompradores, arrayO, object.memo,paquete)
+        let solutionCost = object.ganancia
+        let solutionCostString = JSON.stringify(solutionCost);
+        let solutionString = JSON.stringify(solution);
         let mensaje = "Maxima Ganancia posible: "
-        let result = mensaje.concat(object," Distribucion de las acciones: ")
+        let result = mensaje.concat(solutionCostString," Distribucion de las acciones: ", solutionString)
         return result
     }
     // let A = null;
