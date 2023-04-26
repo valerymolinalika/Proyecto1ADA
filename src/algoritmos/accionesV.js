@@ -29,7 +29,7 @@ function maximizarGananciasVoraz(accionesTotales, precioMinimo,numerocompradores
       const accion = comprador[0];
       
       if ( i < numerocompradores - 1){
-        if (((accionesTotales-comprador[2])>comprador_siguiente[2]) && ((accionesTotales-accionesCompradas) <= comprador_siguiente[2]) && ((accionesTotales-comprador[1]) >= 0)) {
+        if (((accionesTotales-comprador[2])>=comprador_siguiente[2]) && ((accionesTotales-accionesCompradas) <= comprador_siguiente[2]) && ((accionesTotales-comprador[1]) > 0)) {
           break;
           }
         

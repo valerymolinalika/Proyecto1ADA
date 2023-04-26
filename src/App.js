@@ -18,7 +18,7 @@ export default function App() {
 	const [ofertas, setOfertas] = useState(null)
 	const [paquetes, setPaquetes] = useState(null)
 	const [fileContent, setFileContent] = useState(null)
-	console.log(algorithm)
+	//console.log(algorithm)
 
 
 	const [selectedOption2, setSelectedOption2] = useState('');
@@ -106,7 +106,7 @@ export default function App() {
 
 
 	const createFile = (response) => {
-		console.log(response)
+		//console.log(response)
 		const blob = new Blob([response], { type: 'text/plain;charset=utf-8' });
 		saveAs(blob, 'resultado.txt')
 	}

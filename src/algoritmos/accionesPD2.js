@@ -83,6 +83,9 @@
               break;
             }
         }
+        if(i == numerocompradores-1){
+          compras[i] = accionesRestantes
+        }
           }
         }
         
